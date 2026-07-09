@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Ship from './Ship'; 
 
-const socket = io('http://localhost:3001');
+const socket = io('https://battle-ship-3990.onrender.com');
 
 function App() {
   const savedState = JSON.parse(sessionStorage.getItem('battleship_save')) || {};
