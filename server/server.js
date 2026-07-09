@@ -373,4 +373,5 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3001, () => console.log(`Серver запущен на порту 3001 🚀`));
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => console.log(`Сервер запущен на порту ${PORT} 🚀`));
