@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Ship from './Ship'; 
 
+// const socket = io('http://localhost:3001');
 const socket = io('https://battle-ship-3990.onrender.com');
 
 function App() {
@@ -648,7 +649,7 @@ function App() {
       </div>
     );
   }
-
+ 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-4 md:p-8">
       <header className="max-w-5xl mx-auto flex justify-between items-center mb-8 border-b border-slate-700 pb-6">
