@@ -49,8 +49,6 @@ const Ship = ({ size, color = "#10b981", isHorizontal = true, inGrid = false, cl
     }
   };
 
-  // МАГИЯ ЗДЕСЬ: Если корабль на сетке, мы делаем его длинным по умолчанию,
-  // а если он вертикальный - поворачиваем ровно вокруг первой палубы.
   const gridStyle = {
     width: `${size * 100}%`,
     height: '100%',
@@ -58,7 +56,6 @@ const Ship = ({ size, color = "#10b981", isHorizontal = true, inGrid = false, cl
     transform: isHorizontal ? 'rotate(0deg)' : 'rotate(90deg)'
   };
 
-  // Если корабль в меню справа, он просто заполняет свой контейнер
   const menuStyle = {
     width: '100%',
     height: '100%',
