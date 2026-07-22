@@ -287,7 +287,7 @@ function App() {
     socket.emit('fire_shot', currentSession.id, x, y);
   };
 
-  const handleSurrender = () => { if (window.confirm("Are you sure you want to surrender?")) socket.emit('surrender', currentSession.id); };
+  const handleSurrender = () => { if (window.confirm("Вы уверены, что хотите сдаться?")) socket.emit('surrender', currentSession.id); };
   const handleLogout = () => { sessionStorage.removeItem('battleship_save'); socket.emit('logout'); window.location.reload(); };
 
   const getCellStatus = (x, y) => {
@@ -308,10 +308,10 @@ function App() {
     return (
       <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center p-4">
         <form onSubmit={handleRegister} className="bg-slate-800 p-8 rounded-xl shadow-2xl w-full max-w-md text-center border border-slate-700">
-          <h1 className="text-4xl font-extrabold mb-2 text-blue-500 tracking-tight">Battleship</h1>
-          <p className="mb-8 text-slate-400">Enter your callsign to join the game</p>
-          <input type="text" className="w-full px-4 py-3 mb-6 rounded-lg bg-slate-900 border border-slate-600 focus:outline-none focus:border-blue-500 text-lg text-white" placeholder="e.g., Captain" value={nameInput} onChange={(e) => setNameInput(e.target.value)} autoFocus />
-          <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition-colors text-lg shadow-lg">Connect to Server</button>
+          <h1 className="text-4xl font-extrabold mb-2 text-blue-500 tracking-tight">Морской Бой</h1>
+          <p className="mb-8 text-slate-400">Введите позывной для входа в игру</p>
+          <input type="text" className="w-full px-4 py-3 mb-6 rounded-lg bg-slate-900 border border-slate-600 focus:outline-none focus:border-blue-500 text-lg text-white" placeholder="например, Капитан" value={nameInput} onChange={(e) => setNameInput(e.target.value)} autoFocus />
+          <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition-colors text-lg shadow-lg">Подключиться к серверу</button>
         </form>
       </div>
     );
@@ -327,11 +327,11 @@ function App() {
         <header className="w-full max-w-5xl flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
             <div className="flex items-center gap-4">
                 <button onClick={handleCancelGame} className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-lg border border-slate-600 transition-colors flex items-center gap-2 text-sm">
-                    <span>⬅</span> Cancel
+                    <span>⬅</span> Отмена
                 </button>
-                <h1 className="text-xl md:text-2xl font-bold text-blue-400 hidden sm:block">Fleet Placement</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-blue-400 hidden sm:block">Расстановка флота</h1>
             </div>
-            <button onClick={handleLogout} className="text-red-400 hover:text-red-300 font-bold text-sm">LOGOUT</button>
+            <button onClick={handleLogout} className="text-red-400 hover:text-red-300 font-bold text-sm">ВЫЙТИ</button>
         </header>
         
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-center lg:items-start w-full max-w-5xl justify-center">
@@ -366,11 +366,11 @@ function App() {
 
           <div className="bg-slate-800 p-4 md:p-6 rounded-xl border border-slate-700 w-full max-w-[320px] sm:max-w-[400px] lg:w-80 shadow-2xl">
             <button onClick={handleRandomize} className="mb-4 w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center gap-2">
-              <span>🎲</span> Random Placement
+              <span>🎲</span> Случайная расстановка
             </button>
             <button onClick={() => setIsHorizontal(!isHorizontal)} className="mb-6 w-full bg-slate-900 border border-blue-500/50 text-blue-400 font-bold py-3 px-4 rounded-lg transition-colors flex justify-between items-center">
-              <span>Orientation:</span>
-              <span className="flex items-center gap-2 text-white">{isHorizontal ? '⟷ Horiz.' : '↕️ Vert.'} 🔄</span>
+              <span>Ориентация:</span>
+              <span className="flex items-center gap-2 text-white">{isHorizontal ? '⟷ Гориз.' : '↕️ Верт.'} 🔄</span>
             </button>
             
             <div className="flex flex-col gap-3">
@@ -391,7 +391,7 @@ function App() {
             </div>
 
             <button disabled={!isReady || isWaitingForOpponent} onClick={handleReadyClick} className={`mt-6 md:mt-8 w-full font-bold py-4 rounded-lg text-lg transition-colors shadow-lg ${isWaitingForOpponent ? 'bg-amber-600 animate-pulse text-white cursor-wait' : isReady ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/30' : 'bg-slate-700 text-slate-500 cursor-not-allowed'}`}>
-              {isWaitingForOpponent ? 'Waiting for opponent...' : 'Ready for Battle'}
+              {isWaitingForOpponent ? 'Ожидание противника...' : 'Готов к бою'}
             </button>
           </div>
 
@@ -407,14 +407,14 @@ function App() {
     return (
       <div className="min-h-screen bg-slate-900 text-white p-4 flex flex-col items-center overflow-x-hidden">
         <div className={`px-8 py-3 rounded-full mb-4 shadow-lg mt-4 ${myTurn ? 'bg-emerald-600 shadow-emerald-500/30' : 'bg-red-600/70'}`}>
-          <h1 className="text-lg md:text-xl font-bold uppercase tracking-widest">{myTurn ? '🎯 Your turn!' : "🛡️ Opponent's turn..."}</h1>
+          <h1 className="text-lg md:text-xl font-bold uppercase tracking-widest">{myTurn ? '🎯 Ваш ход!' : '🛡️ Ход противника...'}</h1>
         </div>
-        <button onClick={handleSurrender} className="mb-6 bg-slate-800 text-red-400 font-bold py-2 px-6 rounded-lg border border-slate-700 hover:bg-red-900/30 transition-colors">🏳️ Surrender</button>
+        <button onClick={handleSurrender} className="mb-6 bg-slate-800 text-red-400 font-bold py-2 px-6 rounded-lg border border-slate-700 hover:bg-red-900/30 transition-colors">🏳️ Сдаться</button>
         
         <div className="flex flex-col xl:flex-row gap-8 md:gap-12 w-full max-w-5xl justify-center items-center">
           
           <div className="flex flex-col items-center w-full max-w-[320px] sm:max-w-[400px]">
-            <h2 className="text-lg font-bold mb-3 text-slate-400">My Fleet</h2>
+            <h2 className="text-lg font-bold mb-3 text-slate-400">Мой флот</h2>
             <div className="bg-slate-800 p-2 rounded-lg border-2 border-slate-700 w-full shadow-xl" style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: '2px' }}>
               {cells.map((cell, idx) => {
                 const placedShip = placedShips.find(s => s.x === cell.x && s.y === cell.y);
@@ -459,7 +459,7 @@ function App() {
           </div>
 
           <div className="flex flex-col items-center w-full max-w-[320px] sm:max-w-[400px]">
-            <h2 className="text-lg font-bold mb-3 text-blue-400">Enemy Waters</h2>
+            <h2 className="text-lg font-bold mb-3 text-blue-400">Вражеские воды</h2>
             <div className={`bg-slate-800 p-2 rounded-lg border-2 w-full shadow-xl transition-colors ${myTurn ? 'border-blue-500 cursor-pointer md:cursor-crosshair shadow-blue-500/20' : 'border-slate-700 opacity-60'}`} style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: '2px' }}>
               {cells.map((cell, idx) => {
                 const shot = myShots.find(s => s.x === cell.x && s.y === cell.y);
@@ -505,12 +505,12 @@ function App() {
     const isMeWinner = winnerName === userName;
     return (
       <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 text-center">
-        <h1 className={`text-5xl md:text-6xl font-extrabold mb-4 ${isMeWinner ? 'text-emerald-500' : 'text-red-500'}`}>{isMeWinner ? 'VICTORY!' : 'DEFEAT'}</h1>
-        {gameOverReason === 'surrender' && isMeWinner && <div className="bg-emerald-500/10 border border-emerald-500 text-emerald-500 px-6 py-2 rounded mb-4 font-bold">🏳️ OPPONENT SURRENDERED!</div>}
-        {gameOverReason === 'disconnect' && isMeWinner && <div className="bg-amber-500/10 border border-amber-500 text-amber-500 px-6 py-2 rounded mb-4 font-bold animate-pulse">⚠️ OPPONENT DISCONNECTED!</div>}
-        <p className="text-lg md:text-xl text-slate-300 mb-8">{isMeWinner ? 'Enemy fleet sunk!' : `You were defeated by ${winnerName}`}</p>
-        {replayData && <button onClick={() => { setReplayIndex(0); setIsPlayingReplay(true); setAppState('replay'); }} className="mb-4 bg-purple-600 hover:bg-purple-500 transition-colors text-white font-bold py-3 px-8 rounded-xl shadow-lg w-full max-w-xs">🎥 Watch Replay</button>}
-        <button onClick={() => { setAppState('lobby'); setMyShots([]); setEnemyShots([]); setSunkShips({ mine: [], enemy: [] }); setCurrentSession(null); setGameOverReason(null); }} className="bg-blue-600 hover:bg-blue-500 transition-colors text-white font-bold py-3 px-8 rounded-xl w-full max-w-xs">Return to Lobby</button>
+        <h1 className={`text-5xl md:text-6xl font-extrabold mb-4 ${isMeWinner ? 'text-emerald-500' : 'text-red-500'}`}>{isMeWinner ? 'ПОБЕДА!' : 'ПОРАЖЕНИЕ'}</h1>
+        {gameOverReason === 'surrender' && isMeWinner && <div className="bg-emerald-500/10 border border-emerald-500 text-emerald-500 px-6 py-2 rounded mb-4 font-bold">🏳️ ПРОТИВНИК СДАЛСЯ!</div>}
+        {gameOverReason === 'disconnect' && isMeWinner && <div className="bg-amber-500/10 border border-amber-500 text-amber-500 px-6 py-2 rounded mb-4 font-bold animate-pulse">⚠️ ПРОТИВНИК СБЕЖАЛ!</div>}
+        <p className="text-lg md:text-xl text-slate-300 mb-8">{isMeWinner ? 'Вражеский флот потоплен!' : `Вас разгромил(а) ${winnerName}`}</p>
+        {replayData && <button onClick={() => { setReplayIndex(0); setIsPlayingReplay(true); setAppState('replay'); }} className="mb-4 bg-purple-600 hover:bg-purple-500 transition-colors text-white font-bold py-3 px-8 rounded-xl shadow-lg w-full max-w-xs">🎥 Смотреть повтор</button>}
+        <button onClick={() => { setAppState('lobby'); setMyShots([]); setEnemyShots([]); setSunkShips({ mine: [], enemy: [] }); setCurrentSession(null); setGameOverReason(null); }} className="bg-blue-600 hover:bg-blue-500 transition-colors text-white font-bold py-3 px-8 rounded-xl w-full max-w-xs">Вернуться в лобби</button>
       </div>
     );
   }
@@ -541,19 +541,19 @@ function App() {
     return (
       <div className="min-h-screen bg-slate-900 text-white p-4 flex flex-col items-center overflow-x-hidden">
         <div className="px-6 py-3 rounded-full mb-6 mt-4 bg-purple-600 flex gap-4 items-center shadow-lg">
-          <h1 className="font-extrabold uppercase md:text-lg">🎥 Match Replay</h1>
-          <div className="bg-purple-800 px-3 py-1 rounded text-sm font-bold">Turn: {replayIndex} / {replayData.history.length}</div>
+          <h1 className="font-extrabold uppercase md:text-lg">🎥 Повтор матча</h1>
+          <div className="bg-purple-800 px-3 py-1 rounded text-sm font-bold">Ход: {replayIndex} / {replayData.history.length}</div>
         </div>
         <div className="flex flex-wrap justify-center gap-3 mb-8">
-            <button onClick={() => setIsPlayingReplay(!isPlayingReplay)} className="bg-slate-700 px-6 py-2 rounded-lg font-bold hover:bg-slate-600">{isPlayingReplay ? '⏸ Pause' : '▶️ Play'}</button>
-            <button onClick={() => { setReplayIndex(0); setIsPlayingReplay(true); }} className="bg-slate-700 px-6 py-2 rounded-lg font-bold hover:bg-slate-600">🔄 Restart</button>
-            <button onClick={() => setAppState('game_over')} className="bg-red-600 px-6 py-2 rounded-lg font-bold hover:bg-red-500">✖ Close</button>
+            <button onClick={() => setIsPlayingReplay(!isPlayingReplay)} className="bg-slate-700 px-6 py-2 rounded-lg font-bold hover:bg-slate-600">{isPlayingReplay ? '⏸ Пауза' : '▶️ Плей'}</button>
+            <button onClick={() => { setReplayIndex(0); setIsPlayingReplay(true); }} className="bg-slate-700 px-6 py-2 rounded-lg font-bold hover:bg-slate-600">🔄 Заново</button>
+            <button onClick={() => setAppState('game_over')} className="bg-red-600 px-6 py-2 rounded-lg font-bold hover:bg-red-500">✖ Закрыть</button>
         </div>
         
         <div className="flex flex-col xl:flex-row gap-8 md:gap-12 w-full max-w-5xl justify-center items-center">
           
           <div className="flex flex-col items-center w-full max-w-[320px] sm:max-w-[400px]">
-            <h2 className="text-lg font-bold mb-3 text-emerald-400">My Fleet (Revealed)</h2>
+            <h2 className="text-lg font-bold mb-3 text-emerald-400">Мой флот (Раскрыт)</h2>
             <div className="bg-slate-800 p-2 rounded-lg border-2 border-slate-700 w-full shadow-lg" style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: '2px' }}>
               {cells.map((cell, idx) => {
                 const myBoard = replayData.boards[socket.id] || [];
@@ -599,11 +599,11 @@ function App() {
           </div>
 
           <div className="flex flex-col items-center w-full max-w-[320px] sm:max-w-[400px]">
-            <h2 className="text-lg font-bold mb-3 text-red-400">Enemy Fleet (Revealed)</h2>
+            <h2 className="text-lg font-bold mb-3 text-red-400">Вражеский флот (Раскрыт)</h2>
             <div className="bg-slate-800 p-2 rounded-lg border-2 border-slate-700 w-full shadow-lg" style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: '2px' }}>
               {cells.map((cell, idx) => {
                 const enemySocket = Object.keys(replayData.boards).find(k => k !== socket.id);
-                const enemyBoard = enemySocket ? replayData.boards[enemySocket] : [];
+                const enemyBoard = replayData.boards[enemySocket] || [];
                 const placedShip = enemyBoard.find(s => s.x === cell.x && s.y === cell.y);
                 const isShipPart = enemyBoard.some(s => {
                   for (let i = 0; i < s.length; i++) if ((s.horizontal ? s.x + i : s.x) === cell.x && (s.horizontal ? s.y : s.y + i) === cell.y) return true;
@@ -614,11 +614,11 @@ function App() {
                   for(let i=0; i<s.length; i++) if ((s.horizontal ? s.x+i : s.x) === cell.x && (s.horizontal ? s.y : s.y+i) === cell.y) return true;
                   return false;
                 });
-
+                
                 const shot = renderedEnemyShots.find(s => s.x === cell.x && s.y === cell.y);
-
+                
                 let bgClass = "bg-slate-700";
-                if (isShipPart && !shot) bgClass = "bg-blue-500/20"; 
+                if (isShipPart && !shot) bgClass = "bg-slate-500/20"; 
                 if (isShipPart && shot && !isSunkEnemyCell) bgClass = "bg-red-600";
                 if (isShipPart && shot && isSunkEnemyCell) bgClass = "bg-red-500/20";
                 if (!isShipPart && shot) bgClass = "bg-slate-900";
@@ -627,7 +627,7 @@ function App() {
                   <div key={idx} className={`${bgClass} aspect-square rounded-sm relative flex items-center justify-center`}>
                     {placedShip && (
                       <div className="absolute top-0 left-0 z-10 w-full h-full pointer-events-none opacity-90">
-                        <Ship size={placedShip.length} color={isSunkEnemyCell ? "#ef4444" : "#3b82f6"} isHorizontal={placedShip.horizontal} inGrid={true} />
+                        <Ship size={placedShip.length} color={isSunkEnemyCell ? "#ef4444" : "#64748b"} isHorizontal={placedShip.horizontal} inGrid={true} />
                       </div>
                     )}
                     {shot && (
@@ -649,8 +649,55 @@ function App() {
       </div>
     );
   }
+ 
+  return (
+    <div className="min-h-screen bg-slate-900 text-white p-4 md:p-8">
+      <header className="max-w-5xl mx-auto flex justify-between items-center mb-8 border-b border-slate-700 pb-6">
+        <h1 className="text-3xl font-extrabold text-blue-500 tracking-tight">Морской бой</h1>
+        <div className="flex items-center gap-4">
+          <div className="bg-slate-800 px-6 py-2 rounded-full border border-slate-700 hidden sm:block">
+            <span className="text-slate-400 mr-2">Позывной:</span>
+            <span className="text-xl font-bold text-emerald-400">{userName}</span>
+          </div>
+          <button onClick={handleLogout} className="text-red-400 hover:text-red-300 font-bold text-sm">ВЫЙТИ</button>
+        </div>
+      </header>
+      
+      <main className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section className="bg-slate-800 p-6 rounded-xl border border-slate-700 md:col-span-1 h-fit shadow-lg">
+          <h2 className="text-xl font-bold mb-4 text-white">Командование</h2>
+          <label className="block text-slate-400 text-sm mb-2">Размер карты:</label>
+          <select value={gridSize} onChange={(e) => setGridSize(Number(e.target.value))} className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-2 mb-6 focus:outline-none">
+            <option value={10}>10 x 10 (Классика)</option>
+            <option value={15}>15 x 15 (Расширенная)</option>
+            <option value={20}>20 x 20 (Эпичная)</option>
+          </select>
+          <button onClick={handleCreateGame} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-lg mb-2 transition-colors">Создать сетевую игру</button>
+          <div className="flex items-center gap-4 my-2"><hr className="flex-1 border-slate-600" /><span className="text-slate-500 text-sm font-bold uppercase">или</span><hr className="flex-1 border-slate-600" /></div>
+          <button onClick={handleCreateBotGame} className="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-4 rounded-lg transition-colors">🤖 Играть против бота</button>
+        </section>
 
-  return null;
+        <section className="bg-slate-800 p-6 rounded-xl border border-slate-700 md:col-span-2 shadow-lg">
+          <h2 className="text-xl font-bold mb-4 text-white">Активные игры</h2>
+          {sessions.length === 0 ? (
+            <div className="text-slate-500 text-center py-12 border-2 border-dashed border-slate-700 rounded-lg">Нет активных игр. Создайте свою!</div>
+          ) : (
+            <div className="grid gap-4">
+              {sessions.map(session => (
+                <div key={session.id} className="bg-slate-900 border border-slate-700 p-4 rounded-lg flex justify-between items-center">
+                  <div>
+                    <h3 className="font-bold text-lg text-white">Хост: {session.host}</h3>
+                    <p className="text-sm text-slate-400">Карта: {session.gridSize}x{session.gridSize}</p>
+                  </div>
+                  <button onClick={() => handleJoinGame(session)} className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg transition-colors">Присоединиться</button>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
+    </div>
+  );
 }
 
 export default App;
