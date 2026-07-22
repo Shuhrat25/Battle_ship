@@ -6,9 +6,9 @@ import Ship from './Ship';
 const socket = io('https://battle-ship-3990.onrender.com');
 
 function App() {
-  const [sunkShips, setSunkShips] = useState(savedState.sunkShips || { mine: [], enemy: [] });
   const savedState = JSON.parse(sessionStorage.getItem('battleship_save')) || {};
 
+  const [sunkShips, setSunkShips] = useState(savedState.sunkShips || { mine: [], enemy: [] });
   const [appState, setAppState] = useState(savedState.appState || 'login');
   const [userName, setUserName] = useState(savedState.userName || '');
   const [nameInput, setNameInput] = useState('');
@@ -290,20 +290,6 @@ function App() {
     setIsWaitingForOpponent(false);
   };
 
-  const getCellStatus = (x, y) => {
-    for (let ship of placedShips) {
-      for (let i = 0; i < ship.length; i++) {
-        if ((ship.horizontal ? ship.x + i : ship.x) === x && (ship.horizontal ? ship.y : ship.y + i) === y) return 'placed';
-      }
-    }
-    if (selectedShipLength && hoveredCell) {
-      const isUnderPreview = isHorizontal
-        ? (y === hoveredCell.y && x >= hoveredCell.x && x < hoveredCell.x + selectedShipLength)
-        : (x === hoveredCell.x && y >= hoveredCell.y && y < hoveredCell.y + selectedShipLength);
-      if (isUnderPreview) return isValidPlacement(hoveredCell.x, hoveredCell.y, selectedShipLength, isHorizontal) ? 'valid_hover' : 'invalid_hover';
-    } return 'empty';
-  };
-
   if (appState === 'login') {
     return (
       <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center p-4">
@@ -326,10 +312,7 @@ function App() {
       <div className="min-h-screen bg-slate-900 text-white p-2 md:p-8 flex flex-col items-center select-none overflow-x-hidden">
         <header className="w-full max-w-5xl flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
           <div className="flex items-center gap-4">
-            <button
-              onClick={handleCancelGame}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-lg border border-slate-600 transition-colors flex items-center gap-2 text-sm"
-            >
+            <button onClick={handleCancelGame} className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-lg border border-slate-600 transition-colors flex items-center gap-2 text-sm">
               <span>⬅</span> Cancel
             </button>
             <h1 className="text-xl md:text-2xl font-bold text-blue-400 hidden sm:block">Setup Fleet</h1>
@@ -339,12 +322,7 @@ function App() {
 
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-center lg:items-start w-full max-w-5xl justify-center">
           <div className="w-full max-w-[320px] sm:max-w-[400px] md:max-w-[450px]">
-            <div
-              className="bg-slate-800 p-2 rounded-lg border-2 border-slate-700 shadow-2xl w-full"
-              onContextMenu={handleRightClick}
-              onMouseLeave={() => setHoveredCell(null)}
-              style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: '2px' }}
-            >
+            <div className="bg-slate-800 p-2 rounded-lg border-2 border-slate-700 shadow-2xl w-full" onContextMenu={handleRightClick} onMouseLeave={() => setHoveredCell(null)} style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: '2px' }}>
               {cells.map((cell, idx) => {
                 const placedShip = placedShips.find(s => s.x === cell.x && s.y === cell.y);
                 let previewShip = null;
@@ -354,31 +332,15 @@ function App() {
                 }
 
                 return (
-                  <div
-                    key={idx}
-                    onClick={() => handleCellClick(cell.x, cell.y)}
-                    onMouseEnter={() => setHoveredCell({ x: cell.x, y: cell.y })}
-                    className="bg-slate-700 aspect-square rounded-sm cursor-pointer relative"
-                  >
+                  <div key={idx} onClick={() => handleCellClick(cell.x, cell.y)} onMouseEnter={() => setHoveredCell({ x: cell.x, y: cell.y })} className="bg-slate-700 aspect-square rounded-sm cursor-pointer relative">
                     {placedShip && (
                       <div className="absolute top-0 left-0 z-10 w-full h-full pointer-events-none">
-                        <Ship
-                          size={placedShip.length}
-                          color="#10b981"
-                          isHorizontal={placedShip.horizontal}
-                          inGrid={true}
-                        />
+                        <Ship size={placedShip.length} color="#10b981" isHorizontal={placedShip.horizontal} inGrid={true} />
                       </div>
                     )}
-
                     {previewShip && (
                       <div className="absolute top-0 left-0 z-20 w-full h-full pointer-events-none opacity-70 hidden md:block">
-                        <Ship
-                          size={previewShip.length}
-                          color={previewShip.valid ? "#10b981" : "#ef4444"}
-                          isHorizontal={previewShip.horizontal}
-                          inGrid={true}
-                        />
+                        <Ship size={previewShip.length} color={previewShip.valid ? "#10b981" : "#ef4444"} isHorizontal={previewShip.horizontal} inGrid={true} />
                       </div>
                     )}
                   </div>
@@ -403,13 +365,7 @@ function App() {
                 const isEmpty = count === 0;
 
                 return (
-                  <div
-                    key={decks}
-                    onClick={() => !isEmpty && setSelectedShipLength(shipSize)}
-                    className={`flex items-center justify-between p-3 rounded-lg border transition-all ${isEmpty ? 'opacity-30 cursor-not-allowed bg-slate-900 border-slate-800' :
-                      isSelected ? 'bg-slate-800 border-emerald-500 scale-105 shadow-lg' : 'bg-slate-900 border-slate-700 cursor-pointer hover:border-slate-400'
-                      }`}
-                  >
+                  <div key={decks} onClick={() => !isEmpty && setSelectedShipLength(shipSize)} className={`flex items-center justify-between p-3 rounded-lg border transition-all ${isEmpty ? 'opacity-30 cursor-not-allowed bg-slate-900 border-slate-800' : isSelected ? 'bg-slate-800 border-emerald-500 scale-105 shadow-lg' : 'bg-slate-900 border-slate-700 cursor-pointer hover:border-slate-400'}`}>
                     <div className="h-8 md:h-10 relative flex items-center" style={{ width: `${shipSize * 2.5}rem` }}>
                       <Ship size={shipSize} color={isEmpty ? '#475569' : (isSelected ? '#10b981' : '#64748b')} isHorizontal={true} />
                     </div>
@@ -423,7 +379,6 @@ function App() {
               {isWaitingForOpponent ? 'Waiting for enemy...' : 'Ready for Battle'}
             </button>
           </div>
-
         </div>
       </div>
     );
@@ -466,21 +421,14 @@ function App() {
 
                 return (
                   <div key={idx} className={`${bgClass} aspect-square rounded-sm relative flex items-center justify-center`}>
-
                     {placedShip && (
                       <div className="absolute top-0 left-0 z-10 w-full h-full pointer-events-none opacity-90">
                         <Ship size={placedShip.length} color={isSunkMyCell ? "#ef4444" : "#10b981"} isHorizontal={placedShip.horizontal} inGrid={true} />
                       </div>
                     )}
-
                     {shot && (
                       <div className="absolute z-20 w-full h-full flex items-center justify-center pointer-events-none">
-                        {isShipPart ? (
-                          /* ПРЯЧЕМ ТОЧКУ, ЕСЛИ КОРАБЛЬ УБИТ */
-                          !isSunkMyCell && <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full shadow-[0_0_5px_white]"></div>
-                        ) : (
-                          <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-500 rounded-full"></div>
-                        )}
+                        {isShipPart ? (!isSunkMyCell && <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full shadow-[0_0_5px_white]"></div>) : (<div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-500 rounded-full"></div>)}
                       </div>
                     )}
                   </div>
@@ -494,8 +442,6 @@ function App() {
             <div className={`bg-slate-800 p-2 rounded-lg border-2 w-full shadow-xl transition-colors ${myTurn ? 'border-blue-500 cursor-pointer md:cursor-crosshair shadow-blue-500/20' : 'border-slate-700 opacity-60'}`} style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: '2px' }}>
               {cells.map((cell, idx) => {
                 const shot = myShots.find(s => s.x === cell.x && s.y === cell.y);
-
-                const sunkEnemyShip = sunkShips.enemy.find(s => s.x === cell.x && s.y === cell.y);
                 const isSunkEnemyCell = sunkShips.enemy.some(s => {
                   for (let i = 0; i < s.length; i++) if ((s.horizontal ? s.x + i : s.x) === cell.x && (s.horizontal ? s.y : s.y + i) === cell.y) return true;
                   return false;
@@ -508,21 +454,9 @@ function App() {
 
                 return (
                   <div key={idx} onClick={() => handleFireShot(cell.x, cell.y)} className={`${bgClass} aspect-square rounded-sm relative flex items-center justify-center`}>
-
-                    {sunkEnemyShip && (
-                      <div className="absolute top-0 left-0 z-10 w-full h-full pointer-events-none opacity-90">
-                        <Ship size={sunkEnemyShip.length} color="#ef4444" isHorizontal={sunkEnemyShip.horizontal} inGrid={true} />
-                      </div>
-                    )}
-
                     {shot && (
                       <div className="absolute z-20 w-full h-full flex items-center justify-center pointer-events-none">
-                        {shot.status === 'hit' ? (
-                          /* ПРЯЧЕМ ТОЧКУ, ЕСЛИ КОРАБЛЬ УБИТ */
-                          !isSunkEnemyCell && <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full shadow-[0_0_5px_white]"></div>
-                        ) : (
-                          <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-500 rounded-full"></div>
-                        )}
+                        {shot.status === 'hit' ? (!isSunkEnemyCell && <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full shadow-[0_0_5px_white]"></div>) : (<div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-500 rounded-full"></div>)}
                       </div>
                     )}
                   </div>
@@ -530,7 +464,6 @@ function App() {
               })}
             </div>
           </div>
-
         </div>
       </div>
     );
@@ -586,7 +519,6 @@ function App() {
         </div>
 
         <div className="flex flex-col xl:flex-row gap-8 md:gap-12 w-full max-w-5xl justify-center items-center">
-
           <div className="flex flex-col items-center w-full max-w-[320px] sm:max-w-[400px]">
             <h2 className="text-lg font-bold mb-3 text-emerald-400">My Fleet (Revealed)</h2>
             <div className="bg-slate-800 p-2 rounded-lg border-2 border-slate-700 w-full shadow-lg" style={{ display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: '2px' }}>
@@ -620,11 +552,7 @@ function App() {
                     )}
                     {shot && (
                       <div className="absolute z-20 w-full h-full flex items-center justify-center pointer-events-none">
-                        {isShipPart ? (
-                          !isSunkMyCell && <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>
-                        ) : (
-                          <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-500 rounded-full"></div>
-                        )}
+                        {isShipPart ? (!isSunkMyCell && <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>) : (<div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-500 rounded-full"></div>)}
                       </div>
                     )}
                   </div>
@@ -667,11 +595,7 @@ function App() {
                     )}
                     {shot && (
                       <div className="absolute z-20 w-full h-full flex items-center justify-center pointer-events-none">
-                        {isShipPart ? (
-                          !isSunkEnemyCell && <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>
-                        ) : (
-                          <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-500 rounded-full"></div>
-                        )}
+                        {isShipPart ? (!isSunkEnemyCell && <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>) : (<div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-500 rounded-full"></div>)}
                       </div>
                     )}
                   </div>
@@ -679,7 +603,6 @@ function App() {
               })}
             </div>
           </div>
-
         </div>
       </div>
     );
